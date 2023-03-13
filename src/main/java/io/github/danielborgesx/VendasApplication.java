@@ -1,7 +1,9 @@
 package io.github.danielborgesx;
 
 import io.github.danielborgesx.domain.entity.Cliente;
+import io.github.danielborgesx.domain.entity.Pedido;
 import io.github.danielborgesx.domain.repository.Clientes;
+import io.github.danielborgesx.domain.repository.Pedidos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -16,25 +20,27 @@ import java.util.List;
 @RestController
 public class VendasApplication {
     @Bean
-    public CommandLineRunner init(@Autowired Clientes clientes) {
+    public CommandLineRunner init(
+            @Autowired Clientes clientes,
+            @Autowired Pedidos pedidos
+    ) {
         return args -> {
 
-            clientes.save(new Cliente("Daniel"));
-            clientes.save(new Cliente("Andreina"));
-            List<Cliente> todosClientes = clientes.findAll();
-            todosClientes.forEach(System.out::println);
+            Cliente cliente = new Cliente("Daniel");
 
-            todosClientes.forEach(cliente -> {
-                cliente.setNome(cliente.getNome() + " atualizado. ");
-                clientes.save(cliente);
-            });
+            clientes.save(cliente);
 
-            todosClientes = clientes.findAll();
-            todosClientes.forEach(System.out::println);
+            Pedido pedido = new Pedido();
 
-            clientes.findByNomeLike("Cli").forEach(System.out::println);
+            pedido.setCliente(cliente);
+            pedido.setDataPedido(LocalDate.now());
+            pedido.setTotal(BigDecimal.valueOf(100));
 
-            clientes.findAll().forEach(clientes::delete);
+            pedidos.save(pedido);
+
+            Cliente c = clientes.findClienteFetchPedidos(cliente.getId());
+            System.out.println(c);
+            System.out.println(cliente.getPedidos());
         };
     }
 
