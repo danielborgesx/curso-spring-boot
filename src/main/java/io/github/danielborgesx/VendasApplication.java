@@ -13,17 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 
 @SpringBootApplication
 @RestController
 public class VendasApplication {
     @Bean
-    public CommandLineRunner init(
-            @Autowired Clientes clientes,
-            @Autowired Pedidos pedidos
-    ) {
+    public CommandLineRunner init(@Autowired Clientes clientes,
+                                  @Autowired Pedidos pedidos) {
         return args -> {
 
             Cliente cliente = new Cliente("Daniel");
@@ -38,8 +35,8 @@ public class VendasApplication {
 
             pedidos.save(pedido);
 
-            Cliente c = clientes.findClienteFetchPedidos(cliente.getId());
-            System.out.println(c);
+            Cliente clienteComPedido = clientes.findClienteFetchPedidos(cliente.getId());
+            System.out.println(clienteComPedido);
             System.out.println(cliente.getPedidos());
         };
     }

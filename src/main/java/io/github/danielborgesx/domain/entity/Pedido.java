@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Table(name = "Pedido")
 public class Pedido {
 
     @Id
@@ -17,10 +16,8 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
-    @Column(name = "data_pedido")
     private LocalDate dataPedido;
 
-    @Column(name = "total", precision = 20, scale = 2)
     private BigDecimal total;
     @OneToMany(mappedBy = "pedido")
     private Set<ItemPedido> itensPedidos;
