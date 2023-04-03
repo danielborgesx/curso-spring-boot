@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table( name = "Cliente" )
+@Table(name = "cliente")
 public class Cliente {
 
     @Id
@@ -21,18 +21,16 @@ public class Cliente {
 
     public Cliente() {
     }
-
+    public Cliente(Integer id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
     public Set<Pedido> getPedidos() {
         return pedidos;
     }
 
     public void setPedidos(Set<Pedido> pedidos) {
         this.pedidos = pedidos;
-    }
-
-    public Cliente(Integer id, String nome) {
-        this.id = id;
-        this.nome = nome;
     }
 
     public Cliente(String nome) {

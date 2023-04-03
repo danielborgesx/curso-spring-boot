@@ -11,13 +11,13 @@ public class Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "Id")
     private Integer id;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+    @Column(name = "data_pedido")
     private LocalDate dataPedido;
-
+    @Column
     private BigDecimal total;
     @OneToMany(mappedBy = "pedido")
     private Set<ItemPedido> itensPedidos;
