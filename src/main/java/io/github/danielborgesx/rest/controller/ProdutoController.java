@@ -48,7 +48,6 @@ public class ProdutoController {
     }
 
     @PutMapping("{id}")
-    @ResponseStatus(NO_CONTENT)
     public void atualizar(@PathVariable Integer id, @RequestBody Produto produto) {
 
         produtos
