@@ -1,5 +1,6 @@
 package io.github.danielborgesx.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -15,16 +16,21 @@ public class Cliente {
 
     @Column(name = "nome", length = 100)
     private String nome;
+    @Column(name = "cpf", length = 11)
+    private String cpf;
 
-    @OneToMany( mappedBy = "cliente" , fetch = FetchType.LAZY )
+    @JsonIgnore
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
     private Set<Pedido> pedidos;
 
     public Cliente() {
     }
+
     public Cliente(Integer id, String nome) {
         this.id = id;
         this.nome = nome;
     }
+
     public Set<Pedido> getPedidos() {
         return pedidos;
     }
@@ -51,6 +57,14 @@ public class Cliente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     @Override
