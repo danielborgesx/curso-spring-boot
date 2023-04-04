@@ -1,6 +1,5 @@
 package io.github.danielborgesx.rest.controller;
 
-import io.github.danielborgesx.domain.entity.Cliente;
 import io.github.danielborgesx.domain.entity.Produto;
 import io.github.danielborgesx.domain.repository.Produtos;
 import org.springframework.data.domain.Example;
@@ -11,8 +10,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
+
 @RestController
-@RequestMapping("/api/produto")
+@RequestMapping("/api/produtos")
 public class ProdutoController {
 
     private final Produtos produtos;
@@ -29,13 +30,13 @@ public class ProdutoController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     public Produto save(@RequestBody Produto produto) {
         return produtos.save(produto);
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         produtos.findById(id)
                 .map(produto -> {
@@ -47,6 +48,7 @@ public class ProdutoController {
     }
 
     @PutMapping("{id}")
+    @ResponseStatus(NO_CONTENT)
     public void atualizar(@PathVariable Integer id, @RequestBody Produto produto) {
 
         produtos
