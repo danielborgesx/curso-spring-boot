@@ -27,7 +27,6 @@ public class PedidoServiceImpl implements PedidoService {
     private final Pedidos pedidos;
     private final Clientes clientes;
     private final Produtos produtos;
-
     private final ItensPedido itensPedido;
 
     @Override
