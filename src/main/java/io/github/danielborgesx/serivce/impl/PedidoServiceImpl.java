@@ -4,10 +4,12 @@ import io.github.danielborgesx.domain.entity.Cliente;
 import io.github.danielborgesx.domain.entity.ItemPedido;
 import io.github.danielborgesx.domain.entity.Pedido;
 import io.github.danielborgesx.domain.entity.Produto;
+import io.github.danielborgesx.domain.entity.enums.StatusPedido;
 import io.github.danielborgesx.domain.repository.Clientes;
 import io.github.danielborgesx.domain.repository.ItensPedido;
 import io.github.danielborgesx.domain.repository.Pedidos;
 import io.github.danielborgesx.domain.repository.Produtos;
+import io.github.danielborgesx.exception.PedidoNaoEncontradoException;
 import io.github.danielborgesx.exception.RegraNegocioException;
 import io.github.danielborgesx.serivce.PedidoService;
 import io.github.danielborgesx.serivce.dto.ItemPedidoDTO;
@@ -40,6 +42,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setTotal(pedidoDTO.getTotal());
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatusPedido(StatusPedido.REALIZADO);
 
         List<ItemPedido> itemPedido = converterItems(pedido, pedidoDTO.getItems());
         pedidos.save(pedido);
@@ -55,27 +58,33 @@ public class PedidoServiceImpl implements PedidoService {
 
     }
 
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        pedidos
+                .findById(id)
+                .map(pedido -> {
+                    pedido.setStatusPedido(statusPedido);
+                    return pedidos.save(pedido);
+                }).orElseThrow(PedidoNaoEncontradoException::new);
+    }
+
     private List<ItemPedido> converterItems(Pedido pedido, List<ItemPedidoDTO> items) {
         if (items.isEmpty()) {
             throw new RegraNegocioException("Não é possível realizar um produto sem items.");
         }
 
-        return items
-                .stream()
-                .map(itemPedidoDTO -> {
-                    Integer idProduto = itemPedidoDTO.getProduto();
-                    Produto produto = produtos
-                                        .findById(idProduto)
-                                        .orElseThrow(() ->
-                                            new RegraNegocioException("Código de Produto inválido: " + idProduto));
+        return items.stream().map(itemPedidoDTO -> {
+            Integer idProduto = itemPedidoDTO.getProduto();
+            Produto produto = produtos.findById(idProduto).orElseThrow(() -> new RegraNegocioException("Código de Produto inválido: " + idProduto));
 
 
-                    ItemPedido itemPedido = new ItemPedido();
-                    itemPedido.setQuantidade(itemPedidoDTO.getQuantidade());
-                    itemPedido.setPedido(pedido);
-                    itemPedido.setProduto(produto);
-                    return itemPedido;
+            ItemPedido itemPedido = new ItemPedido();
+            itemPedido.setQuantidade(itemPedidoDTO.getQuantidade());
+            itemPedido.setPedido(pedido);
+            itemPedido.setProduto(produto);
+            return itemPedido;
 
-                }).collect(Collectors.toList());
+        }).collect(Collectors.toList());
     }
 }

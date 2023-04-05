@@ -1,5 +1,6 @@
 package io.github.danielborgesx.domain.entity;
 
+import io.github.danielborgesx.domain.entity.enums.StatusPedido;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,5 +27,8 @@ public class Pedido {
     private BigDecimal total;
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itensPedidos;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusPedido statusPedido;
 
 }

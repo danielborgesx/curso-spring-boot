@@ -1,5 +1,6 @@
 package io.github.danielborgesx.rest.controller;
 
+import io.github.danielborgesx.exception.PedidoNaoEncontradoException;
 import io.github.danielborgesx.exception.RegraNegocioException;
 import io.github.danielborgesx.serivce.ApiErrors;
 import org.springframework.http.HttpStatus;
@@ -15,5 +16,10 @@ public class ApplicationControllerAdvice {
     public ApiErrors handleRegraNegocioException(RegraNegocioException exception) {
         String mensagemErro = exception.getMessage();
         return new ApiErrors(mensagemErro);
+    }
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handlePedidoNotFoundExcpection(PedidoNaoEncontradoException exception) {
+        return new ApiErrors(exception.getMessage());
     }
 }

@@ -2,10 +2,13 @@ package io.github.danielborgesx.rest.controller;
 
 import io.github.danielborgesx.domain.entity.ItemPedido;
 import io.github.danielborgesx.domain.entity.Pedido;
+import io.github.danielborgesx.domain.entity.enums.StatusPedido;
 import io.github.danielborgesx.serivce.PedidoService;
+import io.github.danielborgesx.serivce.dto.AtualizacaoStatusPedidoDTO;
 import io.github.danielborgesx.serivce.dto.InformacaoItemPedidoDTO;
 import io.github.danielborgesx.serivce.dto.InformacoesPedidoDTO;
 import io.github.danielborgesx.serivce.dto.PedidoDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,12 +29,14 @@ public class PedidosController {
     public PedidosController(PedidoService pedidoService) {
         this.pedidoService = pedidoService;
     }
+
     @PostMapping
     @ResponseStatus(CREATED)
     public Integer save(@RequestBody PedidoDTO pedidoDTO) {
         Pedido pedido = pedidoService.salvar(pedidoDTO);
         return pedido.getId();
     }
+
     @GetMapping("{id}")
     public InformacoesPedidoDTO getById(@PathVariable Integer id) {
         return pedidoService.obterPedidoCompleto(id)
@@ -40,7 +45,7 @@ public class PedidosController {
                         new ResponseStatusException(NOT_FOUND, "Pedido não encontrado"));
     }
 
-    private InformacoesPedidoDTO converter (Pedido pedido) {
+    private InformacoesPedidoDTO converter(Pedido pedido) {
         return InformacoesPedidoDTO
                 .builder()
                 .codigo(pedido.getId())
@@ -48,23 +53,33 @@ public class PedidosController {
                 .cpf(pedido.getCliente().getCpf())
                 .nomeCLiente(pedido.getCliente().getNome())
                 .total(pedido.getTotal())
+                .status(pedido.getStatusPedido().name())
                 .informacaoItemPedidoDTOList(converter(pedido.getItensPedidos()))
                 .build();
     }
 
     private List<InformacaoItemPedidoDTO> converter(List<ItemPedido> itens) {
-        if(CollectionUtils.isEmpty(itens)){
+        if (CollectionUtils.isEmpty(itens)) {
             return Collections.emptyList();
         }
-       return itens
-               .stream()
-               .map(item ->
-                       InformacaoItemPedidoDTO
-                               .builder()
-                               .descricaoProduto(item.getProduto().getDescricao())
-                               .precoUnitario(item.getProduto().getPreco())
-                               .quantidade(item.getQuantidade()).build()
-                       ).collect(Collectors.toList());
+        return itens
+                .stream()
+                .map(item ->
+                        InformacaoItemPedidoDTO
+                                .builder()
+                                .descricaoProduto(item.getProduto().getDescricao())
+                                .precoUnitario(item.getProduto().getPreco())
+                                .quantidade(item.getQuantidade()).build()
+                ).collect(Collectors.toList());
     }
 
+    @PatchMapping("{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody AtualizacaoStatusPedidoDTO dto) {
+
+        String novoStatus = dto.getNovoStatus();
+        pedidoService.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
+
+    }
 }
