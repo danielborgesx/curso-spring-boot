@@ -1,6 +1,5 @@
-package io.github.danielborgesx.serivce.dto;
+package io.github.danielborgesx.service.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

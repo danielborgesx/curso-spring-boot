@@ -1,4 +1,4 @@
-package io.github.danielborgesx.serivce.impl;
+package io.github.danielborgesx.service.impl;
 
 import io.github.danielborgesx.domain.entity.Cliente;
 import io.github.danielborgesx.domain.entity.ItemPedido;
@@ -11,9 +11,9 @@ import io.github.danielborgesx.domain.repository.Pedidos;
 import io.github.danielborgesx.domain.repository.Produtos;
 import io.github.danielborgesx.exception.PedidoNaoEncontradoException;
 import io.github.danielborgesx.exception.RegraNegocioException;
-import io.github.danielborgesx.serivce.PedidoService;
-import io.github.danielborgesx.serivce.dto.ItemPedidoDTO;
-import io.github.danielborgesx.serivce.dto.PedidoDTO;
+import io.github.danielborgesx.service.PedidoService;
+import io.github.danielborgesx.service.dto.ItemPedidoDTO;
+import io.github.danielborgesx.service.dto.PedidoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,6 +2,7 @@ package io.github.danielborgesx.rest.controller;
 
 import io.github.danielborgesx.domain.entity.Cliente;
 import io.github.danielborgesx.domain.repository.Clientes;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente save(@RequestBody Cliente cliente) {
+    public Cliente save(@RequestBody @Valid Cliente cliente) {
         return clientes.save(cliente);
     }
 
@@ -48,7 +49,7 @@ public class ClienteController {
     }
 
     @PutMapping("{id}")
-    public void atualizar(@PathVariable Integer id, @RequestBody Cliente cliente) {
+    public void atualizar(@PathVariable Integer id, @RequestBody @Valid Cliente cliente) {
 
         clientes
                 .findById(id)

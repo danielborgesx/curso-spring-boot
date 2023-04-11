@@ -3,12 +3,12 @@ package io.github.danielborgesx.rest.controller;
 import io.github.danielborgesx.domain.entity.ItemPedido;
 import io.github.danielborgesx.domain.entity.Pedido;
 import io.github.danielborgesx.domain.entity.enums.StatusPedido;
-import io.github.danielborgesx.serivce.PedidoService;
-import io.github.danielborgesx.serivce.dto.AtualizacaoStatusPedidoDTO;
-import io.github.danielborgesx.serivce.dto.InformacaoItemPedidoDTO;
-import io.github.danielborgesx.serivce.dto.InformacoesPedidoDTO;
-import io.github.danielborgesx.serivce.dto.PedidoDTO;
-import org.springframework.http.HttpStatus;
+import io.github.danielborgesx.service.PedidoService;
+import io.github.danielborgesx.service.dto.AtualizacaoStatusPedidoDTO;
+import io.github.danielborgesx.service.dto.InformacaoItemPedidoDTO;
+import io.github.danielborgesx.service.dto.InformacoesPedidoDTO;
+import io.github.danielborgesx.service.dto.PedidoDTO;
+import jakarta.validation.Valid;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,7 +32,7 @@ public class PedidosController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Integer save(@RequestBody PedidoDTO pedidoDTO) {
+    public Integer save(@RequestBody @Valid PedidoDTO pedidoDTO) {
         Pedido pedido = pedidoService.salvar(pedidoDTO);
         return pedido.getId();
     }
