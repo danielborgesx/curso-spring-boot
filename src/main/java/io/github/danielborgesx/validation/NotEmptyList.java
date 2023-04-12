@@ -2,6 +2,7 @@ package io.github.danielborgesx.validation;
 
 import io.github.danielborgesx.validation.constraintValidation.NotEmptyListValidator;
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,4 +15,6 @@ import java.lang.annotation.Target;
 public @interface NotEmptyList {
 
     String message() default "A list não pode ser vazia.";
+    Class<?>[] groups() default {};
+    Class<? extends Payload> [] payload() default {};
 }
