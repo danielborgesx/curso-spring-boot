@@ -3,7 +3,7 @@ package io.github.danielborgesx.config;
 import io.github.danielborgesx.service.impl.UsuarioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +22,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
@@ -33,13 +34,17 @@ public class SecurityConfig {
                             .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/pedidos/**")
                             .hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/usuarios/**")
+                            .permitAll()
+                        .anyRequest().authenticated()
+
                 )
-                .formLogin();
+                .httpBasic();
         return http.build();
     }
 
     @Bean
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(usuarioService)
                 .passwordEncoder(passwordEncoder());
