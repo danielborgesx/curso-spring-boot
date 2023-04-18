@@ -37,7 +37,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/**")
                             .permitAll()
                         .anyRequest().authenticated()
-
                 )
                 .httpBasic();
         return http.build();
