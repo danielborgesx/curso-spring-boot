@@ -22,7 +22,7 @@ public class JwtService {
     private String chaveAssinatura;
 
     public String gerarToken(Usuario usuario) {
-        long expString = Long.parseLong(expiracao);
+        long expString = Long.valueOf(expiracao);
         LocalDateTime dataHoraExpiracao = LocalDateTime.now().plusMinutes(expString);
         Instant instant = dataHoraExpiracao.atZone(ZoneId.systemDefault()).toInstant();
         Date data = Date.from(instant);
@@ -31,7 +31,7 @@ public class JwtService {
                 .builder()
                 .setSubject(usuario.getLogin())
                 .setExpiration(data)
-                .signWith(SignatureAlgorithm.ES512, chaveAssinatura)
+                .signWith(SignatureAlgorithm.HS512, chaveAssinatura)
                 .compact();
     }
 
@@ -57,7 +57,7 @@ public class JwtService {
         return Jwts
                 .parser()
                 .setSigningKey(chaveAssinatura)
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
 
     }
